@@ -1,36 +1,94 @@
 version: '3.8'
 
 services:
+  # Backend API service
   backend:
     build:
       context: .
       dockerfile: Dockerfile
       target: backend
+      platforms:
+        - linux/amd64
+        - linux/arm64
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - MONGODB_URI=mongodb://mongo:27017/shortvideo
     volumes:
       - ./uploads:/app/uploads
+      - ./backend/config:/app/backend/config
+    depends_on:
+      - mongo
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
+  # Frontend web service
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
       target: frontend
+      platforms:
+        - linux/amd64
+        - linux/arm64
     ports:
       - "80:80"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html
     depends_on:
       - backend
     restart: unless-stopped
 
+  # MongoDB database
+  mongo:
+    image: mongo:6.0
+    platform: linux/amd64
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=shortvideo
+    volumes:
+      - mongo_data:/data/db
+      - ./backend/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis cache (optional)
+  redis:
+    image: redis:7-alpine
+    platform: linux/amd64
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Mobile development service
   mobile-dev:
     build:
       context: .
       dockerfile: Dockerfile
-      target: mobile
+      target: mobile-dev
+      platforms:
+        - linux/amd64
+        - linux/arm64
     ports:
       - "19000:19000"
       - "19001:19001"
@@ -40,7 +98,44 @@ services:
       - /app/mobile/node_modules
     environment:
       - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+      - EXPO_DEVTOOLS_LISTEN_PORT=19000
     restart: unless-stopped
 
+  # Production combined service
+  production:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    ports:
+      - "8080:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongo:27017/shortvideo
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      - mongo
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
 volumes:
+  mongo_data:
+    driver: local
+  redis_data:
+    driver: local
   uploads:
+    driver: local
+
+networks:
+  default:
+    name: shortvideo_network
