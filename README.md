@@ -1,238 +1,161 @@
 # 短视频平台 (Short Video Platform)
 
-一个类似TikTok的短视频平台，包含Web前端、移动端和后端API。
+一个完整的短视频平台，包含移动端应用、Web 前端和后端 API。
 
-## 🚀 功能特性
+## 功能特性
 
-### 用户功能
-- 用户注册和登录
-- 个人资料管理
-- 关注/取消关注其他用户
-- 用户认证和授权
+- 📱 移动端应用 (React Native + Expo)
+- 🌐 Web 前端 (React + TypeScript + Vite)
+- 🔧 后端 API (Node.js + Express)
+- 🔐 用户认证系统
+- 📹 视频上传和播放
+- 🔍 视频搜索功能
+- 👤 用户个人资料管理
 
-### 视频功能
-- 短视频和长视频支持
-- 视频上传和管理
-- 视频点赞、评论、分享
-- 视频搜索和分类
-- 推荐算法
-- 无限滚动浏览
-
-### 社交功能
-- 评论系统
-- 点赞系统
-- 分享功能
-- 收藏功能
-
-## 🛠️ 技术栈
-
-### 后端
-- **Node.js** + **Express.js**
-- **MongoDB** + **Mongoose**
-- **JWT** 认证
-- **Multer** 文件上传
-- **Helmet** 安全中间件
-- **Rate Limiting** 速率限制
-
-### 前端
-- **React 18** + **TypeScript**
-- **Vite** 构建工具
-- **Tailwind CSS** 样式框架
-- **React Router** 路由管理
-- **Zustand** 状态管理
-- **Axios** HTTP客户端
-- **Lucide React** 图标库
+## 技术栈
 
 ### 移动端
-- **React Native** (开发中)
+- React Native
+- Expo
+- TypeScript
+- React Navigation
+- Expo AV (视频播放)
+- Expo Image Picker (视频选择)
 
-## 📁 项目结构
+### Web 前端
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- Zustand (状态管理)
 
-```
-短视频/
-├── backend/                 # 后端API服务
-│   ├── src/
-│   │   ├── controllers/    # 控制器
-│   │   ├── models/        # 数据模型
-│   │   ├── routes/        # 路由定义
-│   │   ├── middleware/    # 中间件
-│   │   ├── config/        # 配置文件
-│   │   └── utils/         # 工具函数
-│   ├── package.json
-│   └── config.env.example
-├── frontend/               # Web前端
-│   ├── src/
-│   │   ├── components/    # React组件
-│   │   ├── pages/        # 页面组件
-│   │   ├── store/        # 状态管理
-│   │   ├── types/        # TypeScript类型
-│   │   └── utils/        # 工具函数
-│   ├── package.json
-│   └── vite.config.ts
-├── mobile/                # 移动端应用
-├── docs/                  # 文档
-└── package.json           # 根目录配置
-```
+### 后端
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- JWT 认证
+- Multer (文件上传)
 
-## 🚀 快速开始
+## 快速开始
 
-### 环境要求
-- Node.js 18+
-- MongoDB 5+
-- npm 或 yarn
+### 使用 Docker (推荐)
 
-### 1. 克隆项目
+1. 克隆仓库
 ```bash
-git clone <repository-url>
-cd 短视频
+git clone https://github.com/zbaimo/ShortVideo.git
+cd ShortVideo
 ```
 
-### 2. 安装依赖
+2. 使用 Docker Compose 启动
 ```bash
-# 安装所有依赖
-npm run install:all
+docker-compose up -d
+```
 
-# 或者分别安装
+3. 访问应用
+- 前端: http://localhost
+- 后端 API: http://localhost:3000
+- 移动端开发服务器: http://localhost:19000
+
+### 手动安装
+
+#### 后端
+```bash
+cd backend
 npm install
-cd backend && npm install
-cd ../frontend && npm install
+cp config.env.example config.env
+# 编辑 config.env 文件配置数据库连接
+npm start
 ```
 
-### 3. 配置环境变量
-
-#### 后端配置
-```bash
-cd backend
-cp config.env.example .env
-```
-
-编辑 `.env` 文件，配置以下必要参数：
-```env
-PORT=5000
-NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/short-video-platform
-JWT_SECRET=your-super-secret-jwt-key-here
-JWT_EXPIRES_IN=7d
-```
-
-#### 前端配置
+#### Web 前端
 ```bash
 cd frontend
-cp .env.example .env
-```
-
-编辑 `.env` 文件：
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
-### 4. 启动数据库
-确保MongoDB服务正在运行：
-```bash
-# macOS/Linux
-sudo systemctl start mongod
-
-# Windows
-net start MongoDB
-
-# 或者使用Docker
-docker run -d -p 27017:27017 --name mongodb mongo:latest
-```
-
-### 5. 启动开发服务器
-```bash
-# 同时启动前后端
+npm install
 npm run dev
-
-# 或者分别启动
-npm run dev:backend    # 后端端口: 5000
-npm run dev:frontend   # 前端端口: 3000
 ```
 
-## 📱 使用说明
-
-### 用户注册/登录
-1. 访问 `http://localhost:3000/register` 注册新账户
-2. 或访问 `http://localhost:3000/login` 登录现有账户
-
-### 浏览视频
-- 首页显示推荐视频，支持无限滚动
-- 点击视频进入详情页面
-- 支持点赞、评论、分享、收藏
-
-### 上传视频
-1. 登录后点击底部导航的"上传"按钮
-2. 填写视频标题、描述、分类等信息
-3. 选择视频文件并上传
-
-### 搜索功能
-- 支持按关键词搜索视频
-- 支持按分类和视频类型筛选
-- 支持搜索用户、标签等
-
-## 🔧 开发指南
-
-### 添加新的API端点
-1. 在 `backend/src/routes/` 中添加路由
-2. 在 `backend/src/controllers/` 中实现控制器逻辑
-3. 在 `backend/src/models/` 中定义数据模型
-
-### 添加新的前端页面
-1. 在 `frontend/src/pages/` 中创建页面组件
-2. 在 `frontend/src/App.tsx` 中添加路由
-3. 在 `frontend/src/types/` 中定义相关类型
-
-### 代码规范
-- 使用ESLint和Prettier保持代码风格一致
-- 遵循TypeScript最佳实践
-- 组件使用函数式组件和Hooks
-- 使用Tailwind CSS进行样式设计
-
-## 🧪 测试
-
-### 后端测试
+#### 移动端
 ```bash
-cd backend
-npm test
+cd mobile
+npm install
+npx expo start
 ```
 
-### 前端测试
+## Docker 镜像
+
+项目已配置自动构建和推送到 Docker Hub：
+
+- `zbaimo/shortvideo:latest` - 生产环境镜像
+- `zbaimo/shortvideo-backend:latest` - 后端服务镜像
+- `zbaimo/shortvideo-frontend:latest` - 前端服务镜像
+- `zbaimo/shortvideo-mobile:latest` - 移动端开发镜像
+
+## 环境变量
+
+### 后端 (.env)
+```env
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/shortvideo
+JWT_SECRET=your_jwt_secret
+```
+
+### 移动端
+移动端应用使用模拟数据进行开发，生产环境需要配置真实的 API 端点。
+
+## API 文档
+
+### 用户认证
+- `POST /api/users/login` - 用户登录
+- `POST /api/users/register` - 用户注册 (仅管理员)
+
+### 视频管理
+- `GET /api/videos` - 获取视频列表
+- `POST /api/videos` - 上传视频
+- `GET /api/videos/:id` - 获取视频详情
+- `PUT /api/videos/:id` - 更新视频信息
+- `DELETE /api/videos/:id` - 删除视频
+
+## 部署
+
+### 使用 Docker Hub 镜像
 ```bash
-cd frontend
-npm test
+# 拉取镜像
+docker pull zbaimo/shortvideo:latest
+
+# 运行容器
+docker run -d -p 3000:3000 zbaimo/shortvideo:latest
 ```
 
-## 📦 构建部署
-
-### 构建生产版本
+### 使用 Docker Compose
 ```bash
-npm run build
+docker-compose up -d
 ```
 
-### 部署到生产环境
-1. 配置生产环境变量
-2. 构建前端和后端
-3. 部署到服务器或云平台
+## 开发
 
-## 🤝 贡献指南
+### 代码结构
+```
+├── backend/          # 后端 API 服务
+├── frontend/         # Web 前端应用
+├── mobile/           # 移动端应用
+├── docs/             # 文档
+├── Dockerfile        # Docker 镜像构建
+├── docker-compose.yml # Docker Compose 配置
+└── .github/          # GitHub Actions 工作流
+```
 
+### 贡献
 1. Fork 项目
 2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
 3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
 5. 打开 Pull Request
 
-## 📄 许可证
+## 许可证
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
 
-## 📞 联系方式
+## 联系方式
 
-如有问题或建议，请通过以下方式联系：
-- 提交 Issue
-- 发送邮件
-- 参与讨论
-
-## 🙏 致谢
-
-感谢所有为这个项目做出贡献的开发者和用户！
+- 项目链接: https://github.com/zbaimo/ShortVideo
+- Docker Hub: https://hub.docker.com/r/zbaimo/shortvideo
