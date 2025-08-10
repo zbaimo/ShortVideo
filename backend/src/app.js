@@ -11,6 +11,14 @@ const videoRoutes = require('./routes/videoRoutes');
 
 const app = express();
 
+// 设置默认环境变量
+if (!process.env.MONGODB_URI) {
+  process.env.MONGODB_URI = 'mongodb://localhost:27017/short-video-platform';
+}
+if (!process.env.JWT_SECRET) {
+  process.env.JWT_SECRET = 'dev-secret-key-change-in-production';
+}
+
 // 连接数据库
 connectDB();
 
